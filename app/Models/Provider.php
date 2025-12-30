@@ -81,17 +81,5 @@ class Provider extends Model
             'receiving_provider_id'
         );
     }
-
-    /**
-     * One-to-many relationship with appointments.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function appointments(): HasMany
-    {
-        return $this->hasMany(
-            Appointment::class,
-            'provider_id'
-        );
-    }
 }
+
