@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Provider extends Model
+class Practitioner extends Model
 {
+
     use HasFactory;
 
     /**
@@ -19,12 +20,9 @@ class Provider extends Model
      */
     protected $fillable = [
         'name',
+        'jobTitle',
         'specialty',
-        'addressLine1',
-        'addressLine2',
-        'city',
-        'state',
-        'zip',
+        'licenseNumber',
         'email',
         'phone',
     ];
@@ -35,24 +33,23 @@ class Provider extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'zip' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
     /**
-     * Many-to-many relationship with practitioners.
+     * Many-to-many relationship with providers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function practitioners(): BelongsToMany
+    public function providers(): BelongsToMany
     {
         // Pivot table and related model name may need adjustment
         return $this->belongsToMany(
-            Practitioner::class,
+            Provider::class,
             'practitioner_provider',
-            'provider_id',
-            'practitioner_id'
+            'practitioner_id',
+            'provider_id'
         );
     }
 
@@ -65,7 +62,7 @@ class Provider extends Model
     {
         return $this->hasMany(
             PatientReferral::class,
-            'sending_provider_id'
+            'sending_practitioner_id'
         );
     }
 
@@ -78,20 +75,8 @@ class Provider extends Model
     {
         return $this->hasMany(
             PatientReferral::class,
-            'receiving_provider_id'
+            'receiving_practitioner_id'
         );
     }
 
-    /**
-     * One-to-many relationship with appointments.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function appointments(): HasMany
-    {
-        return $this->hasMany(
-            Appointment::class,
-            'provider_id'
-        );
-    }
 }
